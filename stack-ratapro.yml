@@ -1,0 +1,55 @@
+services:
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: phpmyadmin
+    restart: always
+    ports: 
+      - 9090:80
+    environment:
+      PMA_ARBITRARY: 1
+    networks:
+      - app-network
+
+  mysql-db:
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    container_name: mysql-db
+    restart: always
+    ports:
+      - 3306:3306
+    volumes:
+      - ./dbfiles:/docker-entrypoint-initdb.d
+      - ./mysql_data:/var/lib/mysql
+    environment: 
+      MYSQL_ROOT_PASSWORD: qwerty
+      MYSQL_DATABASE: agenda
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
+    networks:
+      - app-network
+
+  proyecto-ratapro-back:
+    build: 
+      context: ./backend
+    container_name: proyecto-ratapro-back
+    ports:
+      - 8080:3000
+    depends_on: 
+      - mysql-db
+    networks:
+      - app-network
+
+  proyecto-ratapro-front:
+    build: 
+      context: ./angular
+    container_name: proyecto-ratapro-front
+    ports:
+      - 80:80
+    depends_on: 
+      - proyecto-ratapro-back
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
