@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: proyecto-ratapro-front
+  labels:
+    app: proyecto-ratapro-front
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: proyecto-ratapro-front
+  template:
+    metadata:
+      labels:
+        app: proyecto-ratapro-front
+    spec:
+      containers:
+      - name: frontend
+        image: proyecto-ratapro-front:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 80

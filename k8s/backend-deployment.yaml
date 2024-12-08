@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: proyecto-ratapro-back
+  labels:
+    app: proyecto-ratapro-back
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: proyecto-ratapro-back
+  template:
+    metadata:
+      labels:
+        app: proyecto-ratapro-back
+    spec:
+      containers:
+      - name: backend
+        image: proyecto-ratapro-back:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 3000
+        env:
+        - name: DB_HOST
+          value: "mysql-service"
+        - name: DB_PORT
+          value: "3306"
+        - name: DB_NAME
+          value: "agenda"
+        - name: DB_USER
+          value: "admin"
+        - name: DB_PASSWORD
+          value: "admin"
